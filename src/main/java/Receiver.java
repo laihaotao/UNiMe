@@ -1,5 +1,6 @@
 import com.ibm.watson.developer_cloud.language_translator.v2.LanguageTranslator;
 import com.ibm.watson.developer_cloud.language_translator.v2.model.TranslateOptions;
+import com.ibm.watson.developer_cloud.language_translator.v2.model.Translation;
 import com.ibm.watson.developer_cloud.language_translator.v2.model.TranslationResult;
 import com.ibm.watson.developer_cloud.language_translator.v2.util.Language;
 import com.ibm.watson.developer_cloud.visual_recognition.v3.VisualRecognition;
@@ -84,32 +85,49 @@ public class Receiver {
                     }
                 }
             }
+
             // not an image
             else {
+                // get client input message
+                String clientMsg = "";
                 for(String string: map.keySet()){
                     if(string.equals("Body")){
-                        reply = map.get(string).replaceAll("\\+"," ");
+                        clientMsg = map.get(string).replaceAll("\\+"," ");
                         break;
                     }
                 }
 
+                // determine translate which language to which language
+                String[] indicator = clientMsg.split("_");
+                String source, target;
+                if ("f".equals(indicator[0].toLowerCase())) {
+                    source = Language.FRENCH;
+                    target = Language.ENGLISH;
+                }
+                else {
+                    source = Language.ENGLISH;
+                    target = Language.FRENCH;
+                }
 
                 LanguageTranslator service = new LanguageTranslator();
                 service.setUsernameAndPassword("3349f689-0b9b-45db-8520-e41c3ea5d6df","T4kqlsaqLEAE");
 
                 ArrayList<String> arrayList = new ArrayList<>();
-                arrayList.add(reply);
+                arrayList.add(clientMsg);
 
                 TranslateOptions translateOptions = new TranslateOptions.Builder()
                         .text(arrayList)
-                        .source(Language.ENGLISH)
-                        .target(Language.FRENCH)
+                        .source(source)
+                        .target(target)
                         .build();
 
                 TranslationResult result = service.translate(translateOptions)
                         .execute();
 
-                System.out.println(result);
+                Translation transRes= result.getTranslations().get(0);
+                reply = transRes.getTranslation();
+
+                System.out.println(reply);
 
             }
 
