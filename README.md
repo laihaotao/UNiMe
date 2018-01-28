@@ -16,8 +16,8 @@ We are a three-member-team as listed below (the list follows the first character
 ## Related Techniques
 
 1. The major system is build through using **Twilio SMS APIs**, we have applied a number and it will reply customers automatically.
-2. The functions are build by using **IBM APIs**:  
-  2.1 If you send an image, the system will recognize what it is and give back the result through SMS.  
+2. The functions are build by using **IBM APIs**:  
+  2.1 If you send an image, the system will recognize what it is and give back the result through SMS.  
   2.2 The translating function, can achieve two-way translation, English and French. You can type "F_" before the text which you want to translate.
 
 ## Examples
