@@ -65,7 +65,6 @@ public class Receiver {
                             .build();
                     ClassifiedImages result = service.classify(classifyOptions).execute();
 
-                    //System.out.println(result);
 
                     // parse the json from the AI's response
                     List<ClassifiedImage>  classifiedImagList   = result.getImages();
@@ -74,8 +73,8 @@ public class Receiver {
                     ClassifierResult       classifierResult     = classifierResultList.get(0);
                     List<ClassResult>      classResultList      = classifierResult.getClasses();
                     classResultList.sort((o1, o2) -> {
-                        if (o1.getScore() > o2.getScore()) return 1;
-                        return -1;
+                        if (o1.getScore() > o2.getScore()) return -1;
+                        return 1;
                     });
                     // extract the result and return to the client
                     boolean hasItemWithColor = false;
