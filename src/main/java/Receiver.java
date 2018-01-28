@@ -66,15 +66,15 @@ public class Receiver {
                                         + "}")
                             .build();
                     ClassifiedImages result = service.classify(classifyOptions).execute();
-                    //System.out.println(result);
+                    System.out.println(result);
                     List<ClassifiedImage> classifiedImagList = result.getImages();
                     ClassifiedImage classifiedImage = classifiedImagList.get(0);
                     List<ClassifierResult> classifierResultList = classifiedImage.getClassifiers();
                     ClassifierResult classifierResult = classifierResultList.get(0);
                     List<ClassResult> classResultList = classifierResult.getClasses();
                     classResultList.sort((o1, o2) -> {
-                        if (o1.getScore() > o2.getScore()) return 1;
-                        return -1;
+                        if (o1.getScore() > o2.getScore()) return -1;
+                        return 1;
                     });
                     for (ClassResult cResult : classResultList) {
                         if (!cResult.getClassName().contains("color")){
@@ -82,6 +82,8 @@ public class Receiver {
                             break;
                         }
                     }
+
+
                 }
             }
             // not an image
