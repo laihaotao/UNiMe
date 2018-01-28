@@ -18,7 +18,7 @@ public class Receiver {
         post("receive-sms", (req, res) -> {
 
             Message sms = new Message.Builder()
-                    .body(new Body("hello world"))
+                    .body(new Body("goodnight"))
                     .build();
             MessagingResponse twiml = new MessagingResponse.Builder().message(sms).build();
             return twiml.toXml();
