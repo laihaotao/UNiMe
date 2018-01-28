@@ -3,10 +3,9 @@ import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 
 /**
- * Author:  Eric(Haotao) Lai
+ * ConUHacks 2017-2018
+ * Author:  Haotao (Eric) Lai, Youwei Li, Qi Xia
  * Date:    2018-01-27
- * E-mail:  haotao.lai@gmail.com
- * Website: http://laihaotao.me
  */
 
 public class Sender {

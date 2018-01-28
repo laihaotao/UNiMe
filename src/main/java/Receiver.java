@@ -19,12 +19,10 @@ import java.util.Map;
 import static spark.Spark.post;
 
 /**
- * Author:  Eric(Haotao) Lai
+ * ConUHacks 2017-2018
+ * Author:  Haotao (Eric) Lai, Youwei Li, Qi Xia
  * Date:    2018-01-27
- * E-mail:  haotao.lai@gmail.com
- * Website: http://laihaotao.me
  */
-
 
 public class Receiver {
 
