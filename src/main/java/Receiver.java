@@ -64,7 +64,14 @@ public class Receiver {
             }
             // not an image
             else {
-                System.out.println(req.body());
+                String message = "";
+                for(String string: map.keySet()){
+                    if(string.equals("Body")){
+                        message = map.get(string).replaceAll("\\+"," ");
+                        break;
+                    }
+                }
+                System.out.println(message);
             }
 
             Message sms = new Message.Builder()
@@ -80,5 +87,6 @@ public class Receiver {
         String suffix = url.substring(14);
         return "http://" + suffix.replaceAll("%2F", "/");
     }
+
 
 }
