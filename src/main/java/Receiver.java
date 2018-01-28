@@ -33,9 +33,9 @@ public class Receiver {
         post("receive-sms", (Request req, Response res) -> {
 
             // receive the client message, put them into a map
-            String body = req.body();
-            String[] bodies = body.split("&");
-            Map<String, String> map = new HashMap<>();
+            String              body   = req.body();
+            String[]            bodies = body.split("&");
+            Map<String, String> map    = new HashMap<>();
             for (String str : bodies) {
                 String[] tmp = str.split("=");
                 if (tmp.length == 2) {
@@ -44,7 +44,6 @@ public class Receiver {
             }
 
             int numMedia = Integer.parseInt(map.get("NumMedia"));
-
             String reply = null;
 
             // if it is an image
@@ -53,7 +52,7 @@ public class Receiver {
                 while ((numMedia--) > 0) {
                     // get the real image url and parse it
                     String rawURL = map.get("MediaUrl" + counter++);
-                    String url = parseURL(rawURL);
+                    String url    = parseURL(rawURL);
 
                     // call IBM Watson API to classify
                     VisualRecognition service = new VisualRecognition(
@@ -67,18 +66,22 @@ public class Receiver {
                                         + "}")
                             .build();
                     ClassifiedImages result = service.classify(classifyOptions).execute();
+
                     //System.out.println(result);
-                    List<ClassifiedImage> classifiedImagList = result.getImages();
-                    ClassifiedImage classifiedImage = classifiedImagList.get(0);
+
+                    // parse the json from the AI's response
+                    List<ClassifiedImage>  classifiedImagList   = result.getImages();
+                    ClassifiedImage        classifiedImage      = classifiedImagList.get(0);
                     List<ClassifierResult> classifierResultList = classifiedImage.getClassifiers();
-                    ClassifierResult classifierResult = classifierResultList.get(0);
-                    List<ClassResult> classResultList = classifierResult.getClasses();
+                    ClassifierResult       classifierResult     = classifierResultList.get(0);
+                    List<ClassResult>      classResultList      = classifierResult.getClasses();
                     classResultList.sort((o1, o2) -> {
                         if (o1.getScore() > o2.getScore()) return 1;
                         return -1;
                     });
+                    // extract the result and return to the client
                     for (ClassResult cResult : classResultList) {
-                        if (!cResult.getClassName().contains("color")){
+                        if (!cResult.getClassName().contains("color")) {
                             reply = cResult.getClassName();
                             break;
                         }
@@ -86,34 +89,38 @@ public class Receiver {
                 }
             }
 
-            // not an image
+            // not an image, it must be a text message
             else {
                 // get client input message
                 String clientMsg = "";
-                for(String string: map.keySet()){
-                    if(string.equals("Body")){
-                        clientMsg = map.get(string).replaceAll("\\+"," ");
+                for (String string : map.keySet()) {
+                    if (string.equals("Body")) {
+                        clientMsg = map.get(string).replaceAll("\\+", " ");
                         break;
                     }
                 }
 
                 // determine translate which language to which language
                 String[] indicator = clientMsg.split("_");
-                String source, target;
+                String   source, target;
                 if ("f".equals(indicator[0].toLowerCase())) {
                     source = Language.FRENCH;
                     target = Language.ENGLISH;
-                }
-                else {
+                } else {
                     source = Language.ENGLISH;
                     target = Language.FRENCH;
                 }
 
                 LanguageTranslator service = new LanguageTranslator();
-                service.setUsernameAndPassword("3349f689-0b9b-45db-8520-e41c3ea5d6df","T4kqlsaqLEAE");
+                service.setUsernameAndPassword("3349f689-0b9b-45db-8520-e41c3ea5d6df",
+                        "T4kqlsaqLEAE");
 
                 ArrayList<String> arrayList = new ArrayList<>();
-                arrayList.add(clientMsg);
+                if (clientMsg.contains("_")) {
+                    arrayList.add(indicator[1]);
+                } else {
+                    arrayList.add(clientMsg);
+                }
 
                 TranslateOptions translateOptions = new TranslateOptions.Builder()
                         .text(arrayList)
@@ -124,14 +131,14 @@ public class Receiver {
                 TranslationResult result = service.translate(translateOptions)
                         .execute();
 
-                Translation transRes= result.getTranslations().get(0);
+                Translation transRes = result.getTranslations().get(0);
                 reply = transRes.getTranslation();
 
-                System.out.println(reply);
-
+//                System.out.println(reply);
             }
 
-            if (reply != null){
+            // reply the message to the client
+            if (reply != null) {
                 Message sms = new Message.Builder()
                         .body(new Body(reply))
                         .build();
