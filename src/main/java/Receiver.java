@@ -11,10 +11,7 @@ import com.twilio.twiml.MessagingResponse;
 import spark.Request;
 import spark.Response;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static spark.Spark.post;
 
@@ -120,9 +117,9 @@ public class Receiver {
 
                 ArrayList<String> arrayList = new ArrayList<>();
                 if (clientMsg.contains("_")) {
-                    arrayList.add(indicator[1]);
+                    arrayList.addAll(Arrays.asList(indicator[1].split(" ")));
                 } else {
-                    arrayList.add(clientMsg);
+                    arrayList.addAll(Arrays.asList(clientMsg.split(" ")));
                 }
 
                 TranslateOptions translateOptions = new TranslateOptions.Builder()
@@ -134,9 +131,11 @@ public class Receiver {
                 TranslationResult result = service.translate(translateOptions)
                         .execute();
 
-                Translation transRes = result.getTranslations().get(0);
-                reply = transRes.getTranslation();
+                String translation = "";
+                for(Translation t:result.getTranslations())
+                    translation += t.getTranslation()+" ";
 
+                reply = translation;
 //                System.out.println(reply);
             }
 
