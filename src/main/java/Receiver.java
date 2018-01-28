@@ -82,8 +82,6 @@ public class Receiver {
                             break;
                         }
                     }
-
-                    // handle the result and give response to client
                 }
             }
             // not an image
@@ -95,14 +93,12 @@ public class Receiver {
                     }
                 }
 
-                //System.out.println(message);
-
 
                 LanguageTranslator service = new LanguageTranslator();
                 service.setUsernameAndPassword("3349f689-0b9b-45db-8520-e41c3ea5d6df","T4kqlsaqLEAE");
 
                 ArrayList<String> arrayList = new ArrayList<>();
-//                arrayList.add(message);
+                arrayList.add(reply);
 
                 TranslateOptions translateOptions = new TranslateOptions.Builder()
                         .text(arrayList)
@@ -115,8 +111,6 @@ public class Receiver {
 
                 System.out.println(result);
 
-//                System.out.println(message);
-
             }
 
             if (reply != null){
@@ -126,8 +120,8 @@ public class Receiver {
                 MessagingResponse twiml = new MessagingResponse.Builder().message(sms).build();
                 return twiml.toXml();
             }
-            return null;
 
+            return null;
         });
     }
 
