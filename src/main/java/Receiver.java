@@ -77,14 +77,18 @@ public class Receiver {
                         return 1;
                     });
                     // extract the result and return to the client
+                    boolean hasItemWithColor = false;
                     for (ClassResult cResult : classResultList) {
                         if (!cResult.getClassName().contains("color")) {
                             reply = cResult.getClassName();
+                            hasItemWithColor = true;
                             break;
                         }
                     }
 
-
+                    if (!hasItemWithColor && !classResultList.isEmpty()) {
+                        reply = classResultList.get(0).getClassName();
+                    }
                 }
             }
 
