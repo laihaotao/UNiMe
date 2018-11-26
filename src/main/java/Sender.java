@@ -10,8 +10,8 @@ import com.twilio.type.PhoneNumber;
 
 public class Sender {
     // Find your Account Sid and Token at twilio.com/user/account
-    public static final String ACCOUNT_SID = "AC6f210f3460c42ad7a298d9d0b604b7d3";
-    public static final String AUTH_TOKEN = "6ffec0140a8a0d58bac5f14df170e32f";
+    public static final String ACCOUNT_SID = "";
+    public static final String AUTH_TOKEN = "";
 
     public static void main(String[] args) {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
